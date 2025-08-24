@@ -23,10 +23,12 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => bcrypt(123456), // default password
-            'role' => $this->faker->randomElement(['admin', 'user', 'guest']),
+            // 'role' => $this->faker->randomElement(['admin', 'user', 'guest']),
+            'role' => 'user',
             'profile_photo_path' => $this->faker->optional()->imageUrl(200, 200, 'people'),
             'phone_number' => $this->faker->optional()->phoneNumber(),
-            'status' => $this->faker->randomElement(['active', 'inactive', 'banned']),
+            // 'status' => $this->faker->randomElement(['active', 'inactive', 'banned']),
+            'status' => 'active',
         ];
     }
 }

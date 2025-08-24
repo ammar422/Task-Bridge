@@ -2,11 +2,12 @@
 
 namespace Modules\Users\Models;
 
+use Modules\Projects\Models\Project;
 use Illuminate\Container\Attributes\Auth;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Modules\Users\Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Users\Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 // use Modules\Users\Database\Factories\UserFactory;
@@ -46,6 +47,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id');
+    }
 
     protected static function newFactory(): UserFactory
     {
