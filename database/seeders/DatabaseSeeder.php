@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Modules\Projects\Database\Seeders\ProjectsDatabaseSeeder;
+use Modules\Projects\Database\Seeders\TaskSeeder;
 use Modules\Users\Database\Seeders\UsersDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,7 +17,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UsersDatabaseSeeder::class,
-            ProjectsDatabaseSeeder::class
+            ProjectsDatabaseSeeder::class ,
+            TaskSeeder::class,
         ]);
     }
 }
