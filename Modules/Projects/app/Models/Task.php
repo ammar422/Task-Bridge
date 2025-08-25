@@ -22,9 +22,6 @@ class Task extends Model
         'user_id',
     ];
 
-    protected $casts = [
-        'due_date' => 'date',
-    ];
 
     public function project()
     {

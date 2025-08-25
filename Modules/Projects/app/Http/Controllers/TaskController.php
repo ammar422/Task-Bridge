@@ -2,55 +2,74 @@
 
 namespace Modules\Projects\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Projects\Models\Task;
+use Modules\Projects\Models\Project;
+use Modules\Users\Models\User;
+use App\Http\Controllers\Controller;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return view('projects::index');
+        $tasks = Task::with('project', 'user')->latest()->paginate(12);
+        return view('projects::tasks', compact('tasks'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('projects::create');
+        $projects = Project::all();
+        $users = User::all();
+        return view('projects::create_task', compact('projects', 'users'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:pending,in_progress,completed',
+            'due_date' => 'nullable|date',
+            'project_id' => 'required|exists:projects,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
+        $task = Task::create($validated);
+        return redirect()->route('tasks.show', $task->id)->with('success', 'Task created!');
+    }
 
-    /**
-     * Show the specified resource.
-     */
     public function show($id)
     {
-        return view('projects::show');
+        $task = Task::with('project', 'user')->findOrFail($id);
+        return view('projects::show_task', compact('task'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
-        return view('projects::edit');
+        $task = Task::findOrFail($id);
+        $projects = Project::all();
+        $users = User::all();
+        return view('projects::edit_task', compact('task', 'projects', 'users'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:pending,in_progress,completed',
+            'due_date' => 'nullable|date',
+            'project_id' => 'required|exists:projects,id',
+            'user_id' => 'required|exists:users,id',
+        ]);
+        $task = Task::findOrFail($id);
+        $task->update($validated);
+        return redirect()->route('tasks.show', $task->id)->with('success', 'Task updated!');
+    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
+    public function destroy($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->delete();
+        return redirect()->route('tasks.index')->with('success', 'Task deleted!');
+    }
 }

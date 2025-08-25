@@ -3,7 +3,7 @@
 namespace Modules\Users\Models;
 
 use Modules\Projects\Models\Project;
-use Illuminate\Container\Attributes\Auth;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Users\Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 // use Modules\Users\Database\Factories\UserFactory;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, SoftDeletes, HasUuids;
 
@@ -28,6 +28,7 @@ class User extends Authenticatable
         'profile_photo_path',
         'phone_number',
         'status',
+        'title',
         'remember_token',
     ];
 

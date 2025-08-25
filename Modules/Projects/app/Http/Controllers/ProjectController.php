@@ -2,8 +2,9 @@
 
 namespace Modules\Projects\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Modules\Projects\Models\Project;
 
 class ProjectController extends Controller
 {
@@ -12,28 +13,42 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return view('projects::index');
+        $projects = Project::with('users')->latest()->paginate(12);
+        return view('projects::projects', compact('projects'));
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('projects::create');
+        return view('projects::create_project');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request) {}
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,completed,archived',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+        $project = Project::create($validated);
+        return redirect()->route('projects.show', $project->id)->with('success', 'Project created!');
+    }
 
     /**
      * Show the specified resource.
      */
     public function show($id)
     {
-        return view('projects::show');
+        $project = Project::with('users' , 'tasks')->findOrFail($id);
+        return view("projects::show_project", compact('project'));
     }
 
     /**
@@ -41,16 +56,30 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        return view('projects::edit');
+        $project = Project::findOrFail($id);
+        return view('projects::edit_project', compact('project'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,completed,archived',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date',
+        ]);
+        $project = Project::findOrFail($id);
+        $project->update($validated);
+        return redirect()->route('projects.show', $project->id)->with('success', 'Project updated!');
+    }
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id) {}
+    public function destroy($id)
+    {
+        $project = Project::findOrFail($id);
+        $project->delete();
+        return redirect()->route('projects.index')->with('success', 'Project deleted!');
+    }
 }

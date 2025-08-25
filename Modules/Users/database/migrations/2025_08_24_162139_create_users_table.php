@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('profile_photo_path')->nullable();
             $table->string('phone_number')->nullable();
             $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
+            $table->enum('title', ['backend', 'frontend', 'operations_team', 'product_team', 'managerial'])->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

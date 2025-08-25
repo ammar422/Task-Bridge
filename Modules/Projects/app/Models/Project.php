@@ -21,14 +21,13 @@ class Project extends Model
         'end_date',
     ];
 
-    protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
-    ];
-
     public function users()
     {
         return $this->belongsToMany(User::class, 'project_user', 'project_id', 'user_id');
+    }
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
     protected static function newFactory(): ProjectFactory
     {
