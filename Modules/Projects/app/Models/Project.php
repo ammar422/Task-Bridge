@@ -19,6 +19,7 @@ class Project extends Model
         'status',
         'start_date',
         'end_date',
+        "owner_id",
     ];
 
     public function users()
@@ -28,6 +29,10 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
     protected static function newFactory(): ProjectFactory
     {

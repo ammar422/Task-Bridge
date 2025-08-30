@@ -13,6 +13,6 @@ class UsersDatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory()->count(10)->create();
-        User::first()->update(['role' => 'admin', 'status' => 'active']);
+        User::first()->update(['role' => 'admin', 'status' => 'active' , 'title' => 'owner']);
     }
 }

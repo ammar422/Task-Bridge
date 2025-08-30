@@ -2,6 +2,7 @@
 
 namespace Modules\Projects\Database\Factories;
 
+use Modules\Users\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ProjectFactory extends Factory
@@ -22,6 +23,7 @@ class ProjectFactory extends Factory
             'status' => $this->faker->randomElement(['active', 'completed', 'archived']),
             'start_date' => $this->faker->date(),
             'end_date' => $this->faker->optional()->date(),
+            'owner_id' => User::inrandomOrder()->where('title', 'owner')->first()->id,
         ];
     }
 }

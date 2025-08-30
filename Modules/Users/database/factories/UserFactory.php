@@ -28,6 +28,7 @@ class UserFactory extends Factory
             'profile_photo_path' => $this->faker->optional()->imageUrl(200, 200, 'people'),
             'phone_number' => $this->faker->optional()->phoneNumber(),
             // 'status' => $this->faker->randomElement(['active', 'inactive', 'banned']),
+            'title' => $this->faker->randomElement(['backend', 'frontend', 'operations_team', 'product_team', 'managerial', 'owner']),
             'status' => 'active',
         ];
     }

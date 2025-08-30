@@ -68,13 +68,15 @@
                 <label for="title" class="block text-gray-700 font-semibold mb-2">Title</label>
                 <select name="title" id="title" required autocomplete="title"
                     class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option value="backend" {{ old('title') == 'backend' ? 'selected' : '' }}>backend</option>
-                    <option value="frontend" {{ old('title') == 'frontend' ? 'selected' : '' }}>frontend</option>
+                    <option value="backend" {{ old('title') == 'backend' ? 'selected' : '' }}>Back-end</option>
+                    <option value="frontend" {{ old('title') == 'frontend' ? 'selected' : '' }}>Fron-tend</option>
                     <option value="operations_team" {{ old('title') == 'operations_team' ? 'selected' : '' }}>
-                        operations_team</option>
-                    <option value="product_team" {{ old('title') == 'product_team' ? 'selected' : '' }}>product_team
+                        Operations Team</option>
+                    <option value="product_team" {{ old('title') == 'product_team' ? 'selected' : '' }}>Product Team
                     </option>
-                    <option value="managerial" {{ old('title') == 'managerial' ? 'selected' : '' }}>managerial</option>
+                    <option value="managerial" {{ old('title') == 'managerial' ? 'selected' : '' }}>Managerial</option>
+                    <option value="owner" {{ old('title') == 'owner' ? 'selected' : '' }}>Owner</option>
+                    <option value="">Other</option>
                 </select>
                 @error('title')
                     <div class="text-red-500 text-xs mt-1">{{ $message }}</div>

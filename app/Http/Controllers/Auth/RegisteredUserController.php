@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Modules\Users\Models\User;
 use Illuminate\Validation\Rules;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendVerficationEmail;
+use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\RedirectResponse;
@@ -30,13 +32,13 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'title' => 'required|in:backend,frontend,operations_team,product_team,managerial',
+            'title' => 'required|in:backend,frontend,operations_team,product_team,managerial,owner',
             'mobile' => ['nullable', 'string', 'max:15'],
         ]);
 
-       $user = User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -44,10 +46,9 @@ class RegisteredUserController extends Controller
             'role' => 'user',
             'phone_number' => $request->phone_number,
         ]);
-
-
+        SendVerficationEmail::dispatch($user);
         Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        $redirect = $request->title === 'owner' ? route('projects.index', absolute: false) : route('dashboard', absolute: false);
+        return redirect($redirect);
     }
 }

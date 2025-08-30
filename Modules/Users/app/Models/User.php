@@ -8,13 +8,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Users\Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 // use Modules\Users\Database\Factories\UserFactory;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, SoftDeletes, HasUuids;
+    use HasFactory, SoftDeletes, HasUuids , Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,6 +53,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id');
+    }
+    public function project(): HasMany
+    {
+        return $this->hasMany(Project::class, 'owner_id');
     }
 
     protected static function newFactory(): UserFactory
